@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invitation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- 폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #050b26;
+
+      /* 로망스 브랜드 톤 (대략 로고 느낌) */
+      --brand-pink: #ff7bac;
+      --brand-pink-soft: #ffbcd8;
+      --brand-pink-deep: #ff5c96;
+      --brand-sky: #40c5ff;
+      --brand-sky-deep: #1b9ed8;
+
+      --paper-top: #fffdfb;
+      --paper-bottom: #f9f3f0;
+
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.25);
+      --radius-xl: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #1a234a 0, #02030b 45%, #000 100%);
+      overflow: hidden;
+      transition: background 1s ease;
+      position: relative;
+    }
+
+    /* 공통: 두 스테이지 (인트로 / 레터) */
+    .stage-intro,
+    .stage-letter {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.9s ease, transform 0.9s ease;
+      will-change: opacity, transform;
+    }
+
+    body.phase-intro .stage-intro {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    body.phase-intro .stage-letter {
+      opacity: 0;
+      transform: translateY(16px) scale(0.97);
+      pointer-events: none;
+    }
+
+    body.phase-letter .stage-intro {
+      opacity: 0;
+      transform: translateY(-16px) scale(0.97);
+      pointer-events: none;
+    }
+    body.phase-letter .stage-letter {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    /* 레터 배경 */
+    body.phase-letter {
+      background: radial-gradient(circle at top, #fdf8f2 0, #f1e8df 55%, #e4dacf 100%);
+    }
+
+    /* ====== 1. 인트로 배너 ====== */
+
+    .intro-banner {
+      position: relative;
+      width: 50vw;
+      max-width: 640px;
+      height: 100vh;
+      max-height: 100vh;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.15), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(255,255,255,0.1), transparent 55%),
+        var(--navy);
+      border-radius: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-soft);
+      opacity: 0;
+      transform: scale(0.96);
+      animation: introBannerIn 0.9s 0.1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    }
+
+    @media (max-width: 768px) {
+      .intro-banner {
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+      }
+    }
+
+    .intro-banner::before,
+    .intro-banner::after {
+      content: "";
+      position: absolute;
+      width: 220%;
+      height: 60%;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,0.4), transparent 55%),
+        linear-gradient(135deg, #ffeef7 0%, #ffbedc 35%, #ff7bac 70%, #ffe4f3 100%);
+      border-radius: 50%;
+      filter: drop-shadow(0 12px 30px rgba(0,0,0,0.6));
+      opacity: 0.8;
+    }
+
+    .intro-banner::before {
+      top: -38%;
+      left: -40%;
+      transform: rotate(-15deg);
+      animation: floatBlob1 9s 0.4s ease-in-out infinite alternate;
+    }
+
+    .intro-banner::after {
+      bottom: -38%;
+      right: -40%;
+      transform: rotate(15deg);
+      animation: floatBlob2 10s 0.8s ease-in-out infinite alternate;
+    }
+
+    .splash-inner {
+      position: relative;
+      text-align: center;
+      padding: 40px 24px;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: introSplash 0.9s 0.3s ease-out forwards;
+    }
+
+    .splash-title {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(32px, 5vw, 40px);
+      letter-spacing: 0.4em;
+      text-indent: 0.4em;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow:
+        0 0 10px rgba(255,182,210,0.7),
+        0 0 24px rgba(255,182,210,0.5);
+      animation: titleGlow 2.4s 0.6s ease-in-out infinite alternate;
+    }
+
+    .splash-sub {
+      font-size: clamp(14px, 1.6vw, 18px);
+      letter-spacing: 0.35em;
+      text-indent: 0.35em;
+      color: rgba(255,255,255,0.0);
+      opacity: 0;
+      animation: subFade 0.9s 0.7s ease-out forwards;
+    }
+
+    /* ====== 2. 초대장 카드 ====== */
+
+    .stage-letter-inner {
+      position: relative;
+      width: min(560px, 92vw);
+      height: 100vh;           /* 전체 영역은 화면 높이 100% */
+      max-height: 100vh;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      background: linear-gradient(180deg, var(--paper-top), var(--paper-bottom));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .letter-layout {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .letter-card {
+      position: absolute;
+      top: 14%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 78%;
+      bottom: 35%;
+      background: linear-gradient(180deg, #ffffff, #f9f4f6);
+      border-radius: 18px;
+      box-shadow: 0 18px 28px rgba(0,0,0,0.18);
+      padding: 24px 24px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1;
+      opacity: 0; /* 애니메이션 전 기본값 */
+    }
+
+    .letter-card::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--brand-pink-soft);
+      pointer-events: none;
+    }
+
+    .letter-header {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .letter-header-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--brand-pink-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin: 0 auto 8px;
+      color: var(--brand-pink-deep);
+      background: #fff;
+    }
+
+    .letter-main-title {
+      font-family: "Playfair Display", serif;
+      font-size: 23px;
+      letter-spacing: 0.18em;
+      text-indent: 0.18em;
+      text-transform: uppercase;
+      color: var(--brand-sky-deep);
+      margin-bottom: 4px;
+    }
+
+    .letter-sub-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    .letter-body {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #444;
+      margin: 0px 4px 0px;
+      word-break: keep-all;
+      position: relative;
+      z-index: 1;
+    }
+
+    .letter-body p + p {
+      margin-top: 6px;
+    }
+
+    .letter-info {
+      font-size: 13px;
+      line-height: 1.7;
+      margin-top: 4px;
+      color: #555;
+    }
+
+    .letter-info span.label {
+      font-weight: 700;
+      color: var(--brand-sky-deep);
+    }
+
+    .letter-footer {
+      text-align: center;
+      font-size: 13px;
+      color: #555;
+      position: relative;
+      z-index: 1;
+      padding-bottom: 38px;    /* 글자 아래 여백 */
+    }
+
+    .letter-footer strong {
+      font-weight: 700;
+      color: var(--brand-pink-deep);
+    }
+
+    /* ===== 봉투 ===== */
+
+    .envelope {
+      position: absolute;
+      left: 50%;
+      bottom: 22%;
+      transform: translateX(-50%);
+      width: 78%;
+      height: 38%;
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      overflow: visible;
+      z-index: 2;
+      opacity: 0; /* 애니메이션 전 기본값 */
+    }
+
+    .envelope-body {
+      position: absolute;
+      inset: 26% 0 0 0;
+      border-radius: 0 0 20px 20px;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .envelope-front {
+      position: absolute;
+      inset: 0;
+      border-radius: 0 0 20px 20px;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .env-piece {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #fff4fa, #ffd7e8);
+    }
+
+    .env-bottom {
+      clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
+      border-radius: 0 0 20px 20px;
+    }
+
+    .env-left {
+      clip-path: polygon(0 22%, 50% 66%, 0 66%);
+    }
+
+    .env-right {
+      clip-path: polygon(100% 22%, 100% 66%, 50% 66%);
+    }
+
+    .envelope-ribbon {
+      position: absolute;
+      left: -10%;
+      right: -10%;
+      bottom: 30%;
+      height: 16px;
+      background: linear-gradient(90deg, var(--brand-sky), #e6f7ff, var(--brand-pink-soft));
+      box-shadow: 0 3px 14px rgba(0,0,0,0.3);
+      z-index: 4;
+    }
+
+    .envelope-seal {
+      position: absolute;
+      left: 50%;
+      bottom: 23%;
+      transform: translate(-50%, 0);
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #ffe5f1, #ff9bc1 55%, #d94482 100%);
+      box-shadow:
+        0 10px 16px rgba(0,0,0,0.35),
+        inset 0 4px 6px rgba(255,255,255,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff7fb;
+      font-family: "Playfair Display", serif;
+      font-size: 19px;
+      letter-spacing: 0.1em;
+      z-index: 5;
+    }
+
+    /* ===== 애니메이션 정의 ===== */
+
+    /* 인트로 배너 전체 진입 */
+    @keyframes introBannerIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* 인트로 텍스트 블록 */
+    @keyframes introSplash {
+      0% {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 타이틀 글로우 */
+    @keyframes titleGlow {
+      0% {
+        text-shadow:
+          0 0 10px rgba(255,182,210,0.6),
+          0 0 20px rgba(255,182,210,0.4);
+        transform: translateY(0);
+      }
+      100% {
+        text-shadow:
+          0 0 18px rgba(255,208,230,0.9),
+          0 0 34px rgba(255,200,230,0.8);
+        transform: translateY(-2px);
+      }
+    }
+
+    /* 서브텍스트 페이드 인 */
+    @keyframes subFade {
+      0% {
+        opacity: 0;
+        color: rgba(255,255,255,0);
+        transform: translateY(8px);
+      }
+      100% {
+        opacity: 1;
+        color: rgba(255,255,255,0.9);
+        transform: translateY(0);
+      }
+    }
+
+    /* 배경 버블들 살짝 둥둥 */
+    @keyframes floatBlob1 {
+      0% {
+        transform: translate3d(0,0,0) rotate(-15deg);
+      }
+      100% {
+        transform: translate3d(10px,10px,0) rotate(-10deg);
+      }
+    }
+
+    @keyframes floatBlob2 {
+      0% {
+        transform: translate3d(0,0,0) rotate(15deg);
+      }
+      100% {
+        transform: translate3d(-12px,-8px,0) rotate(10deg);
+      }
+    }
+
+    /* 레터 단계에서 봉투/카드 등장 */
+    @keyframes envelopeRise {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 60px);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    @keyframes cardPopUp {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 40px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+    }
+
+    @keyframes sealPulse {
+      0% {
+        transform: translate(-50%, 0) scale(1);
+      }
+      40% {
+        transform: translate(-50%, 0) scale(1.07);
+      }
+      100% {
+        transform: translate(-50%, 0) scale(1);
+      }
+    }
+
+    /* 레터 단계일 때 애니메이션 적용 */
+    body.phase-letter .envelope {
+      animation: envelopeRise 0.8s 0.1s ease-out forwards;
+    }
+
+    body.phase-letter .letter-card {
+      animation: cardPopUp 0.9s 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    }
+
+    body.phase-letter .envelope-seal {
+      animation: sealPulse 1.4s 1.4s ease-out infinite;
+    }
+
+    @media (max-width: 600px) {
+      .stage-letter-inner {
+        width: 92vw;
+        height: 100vh;
+        max-height: 100vh;
+      }
+      .letter-card {
+        width: 82%;
+        top: 10%;
+        bottom: 36%;
+        padding: 22px 18px 16px;
+      }
+      .letter-body {
+        font-size: 12px;
+      }
+      .letter-info,
+      .letter-footer {
+        font-size: 12px;
+      }
+      .envelope {
+        width: 90%;
+        height: 48%;
+      }
+    }
+  </style>
+</head>
+<body class="phase-intro">
+
+  <!-- 인트로 화면 -->
+  <div class="stage-intro">
+    <div class="intro-banner">
+      <div class="splash-inner">
+        <div class="splash-title">INVITATION</div>
+        <div class="splash-sub">로 망 스 투 어 에&nbsp;초 대 합 니 다</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 초대장 카드 화면 -->
+  <div class="stage-letter">
+    <div class="stage-letter-inner">
+      <div class="letter-layout">
+        <!-- 편지 카드 -->
+        <article class="letter-card">
+          <header class="letter-header">
+            <div class="letter-main-title"><br />INVITATION</div>
+            <div class="letter-sub-title">2025년 로망스 서포터즈 송년회</div>
+          </header>
+
+          <div class="letter-body">
+            <p>안녕하십니까. 로망스투어입니다.</p>
+            <p>로망스와 함께해주셔서 감사한 마음을 담아 자리를 마련했습니다.</p>
+            <p>뜻깊은 시간을 기념하며, 2026년도 앞으로 나아가길 소망합니다.</p>
+            <p>부디 참석하시어 자리를 빛내주시길 바랍니다. 감사합니다.<br /><br /></p>
+
+            <div class="letter-info">
+              <p><span class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;일&nbsp;&nbsp;시</span> &nbsp;&nbsp;2025년 12월 19일 금요일 오후 6시</p>
+              <p><span class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;장&nbsp;&nbsp;소</span> &nbsp;&nbsp;추후 개별 공지 </p>
+            </div>
+          </div>
+
+          <footer class="letter-footer">
+            로망스투어 <strong>일동</strong> 올림
+          </footer>
+        </article>
+
+        <!-- 봉투 -->
+        <div class="envelope">
+          <div class="envelope-body"></div>
+
+          <div class="envelope-front">
+            <div class="env-piece env-left"></div>
+            <div class="env-piece env-right"></div>
+            <div class="env-piece env-bottom"></div>
+          </div>
+
+          <div class="envelope-ribbon"></div>
+          <div class="envelope-seal">R</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener("load", function () {
+      setTimeout(function () {
+        document.body.classList.remove("phase-intro");
+        document.body.classList.add("phase-letter");
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
