@@ -516,28 +516,48 @@
       animation: sealPulse 1.4s 1.4s ease-out infinite;
     }
 
+    /* ===== 모바일 최적화 ===== */
     @media (max-width: 600px) {
+      body {
+        align-items: stretch;
+      }
+
       .stage-letter-inner {
-        width: 92vw;
+        width: 100vw;
         height: 100vh;
         max-height: 100vh;
+        border-radius: 0;
       }
+
+      .letter-layout {
+        width: 100%;
+        height: 100%;
+        align-items: flex-end;    /* 아래 기준 정렬 */
+        justify-content: center;
+      }
+
       .letter-card {
-        width: 82%;
-        top: 10%;
-        bottom: 36%;
-        padding: 22px 18px 16px;
+        width: 92%;
+        top: 6%;                  /* 위쪽으로 조금 붙이고 */
+        bottom: 34%;              /* 아래에서 봉투 들어갈 높이 확보 */
+        padding: 20px 16px 14px;
       }
+
+      .envelope {
+        width: 100%;              /* 가로 꽉 채우기 */
+        height: 34%;              /* 남은 영역을 봉투가 채우도록 */
+        left: 50%;
+        bottom: 0;                /* 화면 맨 아래에 붙이기 */
+        transform: translateX(-50%);
+      }
+
       .letter-body {
         font-size: 12px;
       }
+
       .letter-info,
       .letter-footer {
-        font-size: 12px;
-      }
-      .envelope {
-        width: 90%;
-        height: 48%;
+        font-size: 11px;
       }
     }
   </style>
