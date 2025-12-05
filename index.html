@@ -315,7 +315,7 @@
     .envelope {
       position: absolute;
       left: 50%;
-      bottom: 25%;           
+      bottom: calc(25% - 10px); /* 기존보다 10px 아래로 */
       transform: translateX(-50%);
       width: 78%;
       height: 38%;
@@ -393,33 +393,36 @@
       z-index: 5;
     }
 
+    /* 하단 지도 링크 – 봉투 끝(75%) + 10px 위치 */
+    .map-link {
+      position: absolute;
+      top: calc(75% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: var(--brand-sky-deep);
+      text-decoration: underline;
+      cursor: pointer;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .map-link:hover {
+      color: var(--brand-pink-deep);
+    }
+
     /* ===== 애니메이션 정의 ===== */
 
-    /* 인트로 배너 전체 진입 */
     @keyframes introBannerIn {
-      0% {
-        opacity: 0;
-        transform: scale(0.96);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+      0% { opacity: 0; transform: scale(0.96); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
-    /* 인트로 텍스트 블록 */
     @keyframes introSplash {
-      0% {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      0% { opacity: 0; transform: translateY(16px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* 타이틀 글로우 */
     @keyframes titleGlow {
       0% {
         text-shadow:
@@ -435,7 +438,6 @@
       }
     }
 
-    /* 서브텍스트 페이드 인 */
     @keyframes subFade {
       0% {
         opacity: 0;
@@ -449,26 +451,16 @@
       }
     }
 
-    /* 배경 버블들 살짝 둥둥 */
     @keyframes floatBlob1 {
-      0% {
-        transform: translate3d(0,0,0) rotate(-15deg);
-      }
-      100% {
-        transform: translate3d(10px,10px,0) rotate(-10deg);
-      }
+      0% { transform: translate3d(0,0,0) rotate(-15deg); }
+      100% { transform: translate3d(10px,10px,0) rotate(-10deg); }
     }
 
     @keyframes floatBlob2 {
-      0% {
-        transform: translate3d(0,0,0) rotate(15deg);
-      }
-      100% {
-        transform: translate3d(-12px,-8px,0) rotate(10deg);
-      }
+      0% { transform: translate3d(0,0,0) rotate(15deg); }
+      100% { transform: translate3d(-12px,-8px,0) rotate(10deg); }
     }
 
-    /* 레터 단계에서 봉투/카드 등장 */
     @keyframes envelopeRise {
       0% {
         opacity: 0;
@@ -492,18 +484,11 @@
     }
 
     @keyframes sealPulse {
-      0% {
-        transform: translate(-50%, 0) scale(1);
-      }
-      40% {
-        transform: translate(-50%, 0) scale(1.07);
-      }
-      100% {
-        transform: translate(-50%, 0) scale(1);
-      }
+      0%   { transform: translate(-50%, 0) scale(1); }
+      40%  { transform: translate(-50%, 0) scale(1.07); }
+      100% { transform: translate(-50%, 0) scale(1); }
     }
 
-    /* 레터 단계일 때 애니메이션 적용 */
     body.phase-letter .envelope {
       animation: envelopeRise 0.8s 0.1s ease-out forwards;
     }
@@ -538,14 +523,14 @@
 
       .letter-card {
         width: 92%;
-        top: 6%;            
-        bottom: 36%;      
+        top: 6%;
+        bottom: 36%;
         padding: 20px 16px 14px;
       }
 
       .envelope {
         width: 100%;
-        height: 30%;        
+        height: 30%;
         left: 50%;
         transform: translateX(-50%);
       }
@@ -558,8 +543,13 @@
       .letter-footer {
         font-size: 11px;
       }
-    }
 
+      .map-link {
+        font-size: 11px;
+
+        top: calc(75% + 20px);
+      }
+    }
   </style>
 </head>
 <body class="phase-intro">
@@ -582,18 +572,9 @@
         <article class="letter-card">
           <header class="letter-header">
             <div class="letter-main-title"><br />INVITATION</div>
-            <div class="letter-sub-title">2025년 로망스 서포터즈 송년회<br /><br /></div>
-          </header>
-
-          <div class="letter-body">
-            <p>안녕하십니까. 로망스투어입니다.</p>
-            <p>함께해주신 시간을 기념하며 자리를 마련했습니다.</p>
-            <p>여러분이 바로 로망스투어의 가장 빛나는 별입니다.</p>
-            <p>부디 참석하시어 2025년을 빛내주시길 바랍니다. 감사합니다.<br /><br /></p>
-
-            <div class="letter-info">
-              <p><span class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;일&nbsp;&nbsp;시</span> &nbsp;&nbsp;2025년 12월 19일 금요일 오후 6시</p>
-              <p><span class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;장&nbsp;&nbsp;소</span> &nbsp;&nbsp;추후 개별 공지 </p> <br />
+            <div class="letter-sub-title">2025년 로망스 서포터즈 송년회</div>
+         금요일 오후 6시</p>
+              <p><span class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;장&nbsp;&nbsp;소</span> &nbsp;&nbsp;시청역 시티호프치킨 (서울 중구 남대문로1길 26-4)</p>
             </div>
           </div>
 
@@ -616,6 +597,16 @@
           <div class="envelope-seal">R</div>
         </div>
       </div>
+
+      <!-- 하단 지도 링크 -->
+      <a
+        href="https://naver.me/GQ1lsKUo"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="map-link"
+      >
+        참석장소 네이버지도 바로가기 (클릭)
+      </a>
     </div>
   </div>
 
@@ -629,8 +620,4 @@
   </script>
 </body>
 </html>
-
-
-
-
 
